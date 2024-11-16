@@ -211,13 +211,13 @@ jobs:
           echo "*.sage.py" >> .gitignore
           echo "" >> .gitignore
           echo "# Environments" >> .gitignore
-          echo ".env" >> .gitignore
-          echo ".venv/" >> .gitignore
-          echo "env/" >> .gitignore
-          echo "venv/" >> .gitignore
-          echo "ENV/" >> .gitignore
-          echo "env.bak/" >> .gitignore
-          echo "venv.bak/" >> .gitignore
+          echo "#.env" >> .gitignore
+          echo "#.venv/" >> .gitignore
+          echo "#env/" >> .gitignore
+          echo "#venv/" >> .gitignore
+          echo "#ENV/" >> .gitignore
+          echo "#env.bak/" >> .gitignore
+          echo "#venv.bak/" >> .gitignore
           echo "" >> .gitignore
           echo "# Spyder project settings" >> .gitignore
           echo ".spyderproject" >> .gitignore
@@ -317,6 +317,7 @@ jobs:
       - Check_Init
       - Setear_GitFlow
       - Setear_GitIgnore
+      - Instalar_Python
     if: needs.Check_Init.outputs.script_already_ran == 'false'
     permissions:
       contents: write
