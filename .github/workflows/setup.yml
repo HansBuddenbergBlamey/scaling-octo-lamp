@@ -54,12 +54,12 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global init.defaultBranch main
           git flow init -d
-          touch .github/giflow_ran
       
       - name: Realizar commit de los cambios
         run: |
-          git add .
-          git commit -m "Se aplico Git Flow al Projecto ${{ github.repository }} 🚀"
+          git checkout develop
+          git merge main
+          git push origin develop
 
   Setear_GitIgnore:
     runs-on: ubuntu-latest
