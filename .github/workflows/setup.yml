@@ -71,11 +71,11 @@ jobs:
         run: |
           git fetch origin
           if [ "${{ env.branch_exists }}" == "false" ]; then
-            git checkout -b develop
+            git checkout -b develop origin/main
           else
             git checkout develop
+            git rebase origin/main || git rebase --abort
           fi
-          git rebase main || git rebase --abort
           git push --force-with-lease origin develop
 
   Setear_GitIgnore:
