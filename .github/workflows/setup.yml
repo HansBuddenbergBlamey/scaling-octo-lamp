@@ -65,8 +65,10 @@ jobs:
           git config --global init.defaultBranch main
           git flow init -d
       
-      - name: Realizar commit de los cambios
+      - name: Realizar rebase de main a develop
+        if: env.branch_exists == 'true'
         run: |
+          git fetch origin
           git checkout develop
           git rebase main
           git push --force-with-lease origin develop
