@@ -67,16 +67,16 @@ jobs:
           sudo apt-get -y install git-flow
           git flow init -d
       
-      - name: Realizar rebase de main a develop
+      - name: Resetear develop usando main
         run: |
           git fetch origin
           if [ "${{ env.branch_exists }}" == "false" ]; then
             git checkout -b develop origin/main
           else
             git checkout develop
-            git rebase origin/main || git rebase --abort
+            git reset --hard origin/main
           fi
-          git push --force-with-lease origin develop
+          git push --force origin develop
 
   Setear_GitIgnore:
     runs-on: ubuntu-latest
