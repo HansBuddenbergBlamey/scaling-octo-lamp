@@ -298,8 +298,10 @@ jobs:
             echo "# Add your dependencies here" > requirements.txt
           fi
           if [ -f .venv/Scripts/pip ]; then
+            venv/Scripts/pip install --upgrade pip
             .venv/Scripts/pip install -r requirements.txt
           else
+            .venv/bin/pip install --upgrade pip
             .venv/bin/pip install -r requirements.txt
           fi
 
