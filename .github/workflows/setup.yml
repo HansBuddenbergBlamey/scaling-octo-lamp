@@ -81,7 +81,7 @@ jobs:
   Setear_GitIgnore:
     runs-on: ubuntu-latest
     needs: Setear_GitFlow
-    if: needs.Check_Init.outputs.script_already_ran == 'false'
+    if: needs.Check_Init.outputs.script_already_ran != 'false'
 
     steps:
     - name: Checkout repository
