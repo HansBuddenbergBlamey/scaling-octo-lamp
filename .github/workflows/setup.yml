@@ -1,0 +1,260 @@
+name: Setup Project
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  Check_Init:
+    runs-on: ubuntu-latest
+    outputs:
+      script_already_ran: ${{ steps.check_state.outputs.script_already_ran }}
+    permissions:
+      contents: write
+
+    steps:    
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Chequear si el script ya se ejecutó
+        id: check_state
+        run: |
+          if [ -f ".github/script_ran" ]; then
+            echo "script_already_ran=true" >> $GITHUB_OUTPUT
+          else
+            echo "script_already_ran=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Validacion de estado de la Initialización
+        run: |
+          if [ "${{ steps.check_state.outputs.script_already_ran }}" == "true" ]; then
+            echo -e "Existe Archivo: \033[0;32m${{ steps.check_state.outputs.script_already_ran }}\033[0m - Listo Para Ejecutar: \033[0;31mfalse\033[0m."
+          else
+            echo -e "Existe Archivo: \033[0;31m${{ steps.check_state.outputs.script_already_ran }}\033[0m - Listo Para Ejecutar: \033[0;32mtrue\033[0m."
+          fi
+
+  Setear_GitFlow:
+    runs-on: ubuntu-latest
+    needs: Check_Init
+    if: needs.Check_Init.outputs.script_already_ran == 'false'
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - run: |
+          echo "Branch actual: ${{ github.ref }}"
+
+      - name: Creación de Git Flow
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install git-flow
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global init.defaultBranch main
+          git flow init -d
+          echo "Branch actual: ${{ github.ref }}"
+          touch .github/giflow_ran
+      
+      - name: Realizar commit de los cambios
+        run: |
+          git add .
+          git commit -m "Se aplico Git Flow al Projecto ${{ github.repository }} 🚀"
+
+  Setear_GitIgnore:
+    runs-on: ubuntu-latest
+    needs: 
+      - Setear_GitFlow
+    if: needs.Check_Init.outputs.script_already_ran == 'false'
+
+    steps:
+      - name: Creacion de Git Ignore
+        id: check_state
+        run: |
+          if [ -f ".gitignore" ]; then
+            echo "gitignore_exist=true" >> $GITHUB_OUTPUT
+            echo ".gitignore ya existe"
+          else
+            echo "gitignore_exist=false" >> $GITHUB_OUTPUT
+            touch .gitignore
+          fi
+
+      - name: Ingresar registros a de Git Ignore
+        if: env.gitignore_exist == 'false'
+        run: |
+          echo "# Byte-compiled / optimized / DLL files" >> .gitignore
+          echo "__pycache__/" >> .gitignore
+          echo "*.py[cod]" >> .gitignore
+          echo "*$py.class" >> .gitignore
+          echo "" >> .gitignore
+          echo "# C extensions" >> .gitignore
+          echo "*.so" >> .gitignore
+          echo "" >> .gitignore
+          echo "# Distribution / packaging" >> .gitignore
+          echo ".Python" >> .gitignore
+          echo "build/" >> .gitignore
+          echo "develop-eggs/" >> .gitignore
+          echo "dist/" >> .gitignore
+          echo "downloads/" >> .gitignore
+          echo "eggs/" >> .gitignore
+          echo ".eggs/" >> .gitignore
+          echo "lib/" >> .gitignore
+          echo "lib64/" >> .gitignore
+          echo "parts/" >> .gitignore
+          echo "sdist/" >> .gitignore
+          echo "var/" >> .gitignore
+          echo "wheels/" >> .gitignore
+          echo "share/python-wheels/" >> .gitignore
+          echo "*.egg-info/" >> .gitignore
+          echo ".installed.cfg" >> .gitignore
+          echo "*.egg" >> .gitignore
+          echo "MANIFEST" >> .gitignore
+          echo "" >> .gitignore
+          echo "# PyInstaller" >> .gitignore
+          echo "#  Usually these files are written by a python script from a template" >> .gitignore
+          echo "#  before PyInstaller builds the exe, so as to inject date/other infos into it." >> .gitignore
+          echo "*.manifest" >> .gitignore
+          echo "*.spec" >> .gitignore
+          echo "" >> .gitignore
+          echo "# Installer logs" >> .gitignore
+          echo "pip-log.txt" >> .gitignore
+          echo "pip-delete-this-directory.txt" >> .gitignore
+          echo "" >> .gitignore
+          echo "# Unit test / coverage reports" >> .gitignore
+          echo "htmlcov/" >> .gitignore
+          echo ".tox/" >> .gitignore
+          echo ".nox/" >> .gitignore
+          echo ".coverage" >> .gitignore
+          echo ".coverage.*" >> .gitignore
+          echo ".cache" >> .gitignore
+          echo "nosetests.xml" >> .gitignore
+          echo "coverage.xml" >> .gitignore
+          echo "*.cover" >> .gitignore
+          echo "*.py,cover" >> .gitignore
+          echo ".hypothesis/" >> .gitignore
+          echo ".pytest_cache/" >> .gitignore
+          echo "cover/" >> .gitignore
+          echo "" >> .gitignore
+          echo "# Translations" >> .gitignore
+          echo "*.mo" >> .gitignore
+          echo "*.pot" >> .gitignore
+          echo "" >> .gitignore
+          echo "# Django stuff:" >> .gitignore
+          echo "*.log" >> .gitignore
+          echo "log/" >> .gitignore
+          echo "local_settings.py" >> .gitignore
+          echo "db.sqlite3" >> .gitignore
+          echo "db.sqlite3-journal" >> .gitignore
+          echo "" >> .gitignore
+          echo "# Flask stuff:" >> .gitignore
+          echo "instance/" >> .gitignore
+          echo ".webassets-cache" >> .gitignore
+          echo "" >> .gitignore
+          echo "# Scrapy stuff:" >> .gitignore
+          echo ".scrapy" >> .gitignore
+          echo "" >> .gitignore
+          echo "# Sphinx documentation" >> .gitignore
+          echo "docs/_build/" >> .gitignore
+          echo "docs/_static/" >> .gitignore
+          echo "docs/_templates/" >> .gitignore
+          echo "" >> .gitignore
+          echo "# PyBuilder" >> .gitignore
+          echo "target/" >> .gitignore
+          echo "" >> .gitignore
+          echo "# Jupyter Notebook" >> .gitignore
+          echo ".ipynb_checkpoints" >> .gitignore
+          echo "" >> .gitignore
+          echo "# IPython" >> .gitignore
+          echo "profile_default/" >> .gitignore
+          echo "ipython_config.py" >> .gitignore
+          echo "" >> .gitignore
+          echo "# pyenv" >> .gitignore
+          echo ".python-version" >> .gitignore
+          echo "" >> .gitignore
+          echo "# pipenv" >> .gitignore
+          echo "Pipfile.lock" >> .gitignore
+          echo "" >> .gitignore
+          echo "# PEP 582; used by e.g. github.com/David-OConnor/pyflow" >> .gitignore
+          echo "__pypackages__/" >> .gitignore
+          echo "" >> .gitignore
+          echo "# Celery stuff" >> .gitignore
+          echo "celerybeat-schedule" >> .gitignore
+          echo "celerybeat.pid" >> .gitignore
+          echo "" >> .gitignore
+          echo "# SageMath parsed files" >> .gitignore
+          echo "*.sage.py" >> .gitignore
+          echo "" >> .gitignore
+          echo "# Environments" >> .gitignore
+          echo ".env" >> .gitignore
+          echo ".venv/" >> .gitignore
+          echo "env/" >> .gitignore
+          echo "venv/" >> .gitignore
+          echo "ENV/" >> .gitignore
+          echo "env.bak/" >> .gitignore
+          echo "venv.bak/" >> .gitignore
+          echo "" >> .gitignore
+          echo "# Spyder project settings" >> .gitignore
+          echo ".spyderproject" >> .gitignore
+          echo ".spyproject" >> .gitignore
+          echo "" >> .gitignore
+          echo "# Rope project settings" >> .gitignore
+          echo ".ropeproject" >> .gitignore
+          echo "" >> .gitignore
+          echo "# mkdocs documentation" >> .gitignore
+          echo "/site" >> .gitignore
+          echo "" >> .gitignore
+          echo "# mypy" >> .gitignore
+          echo ".mypy_cache/" >> .gitignore
+          echo ".dmypy.json" >> .gitignore
+          echo "dmypy.json" >> .gitignore
+          echo "" >> .gitignore
+          echo "# Pyre type checker" >> .gitignore
+          echo ".pyre/" >> .gitignore
+          echo "" >> .gitignore
+          echo "# pytype static type analyzer" >> .gitignore
+          echo ".pytype/" >> .gitignore
+          echo "" >> .gitignore
+          echo "# Cython debug symbols" >> .gitignore
+          echo "cython_debug/" >> .gitignore
+          echo "" >> .gitignore
+          echo "# VS Code" >> .gitignore
+          echo ".vscode/" >> .gitignore
+          echo "" >> .gitignore
+          echo "# Otros" >> .gitignore
+          echo "logs/" >> .gitignore
+          echo "temp/" >> .gitignore
+          echo "db/" >> .gitignore
+          echo "src/" >> .gitignore
+          echo "tests/" >> .gitignore
+          echo "docs/" >> .gitignore
+          echo " >> .gitignore"
+
+  Finalizar_Setup:
+    runs-on: ubuntu-latest
+    needs: 
+      - Check_Init
+      - Setear_GitFlow
+      - Setear_GitIgnore
+    if: needs.Check_Init.outputs.script_already_ran == 'false'
+    permissions:
+      contents: write
+
+    steps:  
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Crear archivo de estado
+        if: needs.Check_Init.outputs.script_already_ran == 'false'
+        run: |
+          echo -e "Archivo de Estado Creado Previmente: \033[0;31m${{ needs.Check_Init.outputs.script_already_ran }}"
+          # Crear el archivo de estado para indicar que el script ya se ejecutó
+          touch .github/script_ran
+          echo -e "Archivo de Estado Creado Previmente: \033[0;32mtrue"
+
+      - name: Realizar commit de los cambios
+        uses: stefanzweifel/git-auto-commit-action@v5.0.1
+        with:
+          commit_message: Se aplico Setup al Projecto ${{ github.repository }} 🚀"
