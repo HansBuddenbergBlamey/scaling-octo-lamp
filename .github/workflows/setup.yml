@@ -269,7 +269,7 @@ jobs:
       - Setear_GitFlow
     permissions:
       contents: write
-    if: needs.Check_Init.outputs.script_already_ran != 'false'
+    if: needs.Check_Init.outputs.script_already_ran == 'false'
 
     steps:
       - name: Checkout repository
