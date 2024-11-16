@@ -293,23 +293,22 @@ jobs:
 
       - name: Install dependencies
         run: |
-          if [ -f .venv/Scripts/pip ]; then 
-            if [ -f requirements.txt ]; then
-                .venv/Scripts/pip install -r requirements.txt; 
-            else
-              echo "requirements.txt not found"
-              exit 1
-            fi
+          if [ ! -f requirements.txt ]; then
+            echo "Creating a base requirements.txt file"
+            echo "# Add your dependencies here" > requirements.txt
+          fi
+          if [ -f .venv/Scripts/pip ]; then
+            .venv/Scripts/pip install -r requirements.txt
           else
-            .venv/bin/pip install -r requirements.txt; 
+            .venv/bin/pip install -r requirements.txt
           fi
 
       - name: Realizar commit de los cambios
         run: |
           git fetch origin
           git checkout develop || git checkout -b develop origin/main
-          git add .gitignore
-          git commit -m "Actualizar .gitignore"
+          git add requirements.txt .venv/
+          git commit -m "Agregar entorno virtual y dependencias a requirements.txt"
           git push origin develop
 
   Finalizar_Setup:
