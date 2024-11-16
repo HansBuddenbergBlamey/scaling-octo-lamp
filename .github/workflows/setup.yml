@@ -68,11 +68,14 @@ jobs:
           git flow init -d
       
       - name: Realizar rebase de main a develop
-        if: env.branch_exists == 'true'
         run: |
           git fetch origin
-          git checkout develop
-          git rebase main
+          if [ "${{ env.branch_exists }}" == "false" ]; then
+            git checkout -b develop
+          else
+            git checkout develop
+          fi
+          git rebase main || git rebase --abort
           git push --force-with-lease origin develop
 
   Setear_GitIgnore:
