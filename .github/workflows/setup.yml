@@ -54,6 +54,7 @@ jobs:
           else
             echo "branch_exists=false" >> $GITHUB_ENV
           fi
+
       - name: Git config
         run: |
           git config --global user.name "github-actions[bot]"
@@ -87,6 +88,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Git config
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global init.defaultBranch main
 
       - name: Creacion de Git Ignore
         id: check_state
