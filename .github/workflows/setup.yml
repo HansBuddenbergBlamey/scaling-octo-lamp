@@ -248,12 +248,12 @@ jobs:
           echo "docs/" >> .gitignore
           echo "" >> .gitignore
 
-          - name: Realizar commit de los cambios
-            run: |
-              git checkout develop
-              git add .gitignore
-              git commit -m "Actualizar .gitignore"
-              git push origin develop
+      - name: Realizar commit de los cambios
+        run: |
+          git checkout develop
+          git add .gitignore
+          git commit -m "Actualizar .gitignore"
+          git push origin develop
 
   Finalizar_Setup:
     runs-on: ubuntu-latest
