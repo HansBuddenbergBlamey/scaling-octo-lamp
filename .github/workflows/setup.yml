@@ -280,6 +280,14 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
+      
+      - name: Install dependencies
+        run: |
+          if [ ! -f requirements.txt ]; then
+            echo "Creating a base requirements.txt file"
+            echo "# Add your dependencies here" > requirements.txt
+          fi
+
       - name: Set up Python 3.10
         uses: getsentry/action-setup-venv@v2.1.0
         id: venv
@@ -287,8 +295,7 @@ jobs:
           python-version: 3.10.15
           cache-dependency-path: |
             requirements.txt
-            requirements-frozen.txt
-          install-cmd: pip install -r requirements.txt -c requirements-frozen.txt
+          install-cmd: pip install -r requirements.txt
 
       - name: Realizar commit de los cambios
         run: |
