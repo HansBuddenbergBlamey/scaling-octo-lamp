@@ -290,7 +290,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install virtualenv
           python -m venv .venv
-          if [ -f .venv\Scripts\pip ]; then .venv\Scripts\pip install -r requirements.txt; else .venv/bin/pip install -r requirements.txt; fi
+
+      - name: Install dependencies
+        run: |
+          if [ -f .venv/Scripts/pip ]; then 
+            if [ -f requirements.txt ]; then
+                .venv/Scripts/pip install -r requirements.txt; 
+            else
+              echo "requirements.txt not found"
+              exit 1
+            fi
+          else
+            .venv/bin/pip install -r requirements.txt; 
+          fi
 
       - name: Realizar commit de los cambios
         run: |
@@ -318,8 +330,7 @@ jobs:
         if: needs.Check_Init.outputs.script_already_ran == 'false'
         run: |
           echo -e "Archivo de Estado Creado Previmente: \033[0;31m${{ needs.Check_Init.outputs.script_already_ran }}"
-          # Crear el archivo de estado para indicar que el script ya se ejecutó
-          touch .github/script_ran
+          #touch .github/script_ran
           echo -e "Archivo de Estado Creado Previmente: \033[0;32mtrue"
 
       - name: Realizar commit de los cambios
