@@ -250,7 +250,8 @@ jobs:
 
       - name: Realizar commit de los cambios
         run: |
-          git checkout develop
+          git fetch origin
+          git checkout develop || git checkout -b develop origin/main
           git add .gitignore
           git commit -m "Actualizar .gitignore"
           git push origin develop
