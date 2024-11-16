@@ -284,7 +284,7 @@ jobs:
         uses: getsentry/action-setup-venv@v2.1.0
         id: venv
         with:
-          python-version: 3.10
+          python-version: 3.10.15
           cache-dependency-path: |
             requirements.txt
             requirements-frozen.txt
