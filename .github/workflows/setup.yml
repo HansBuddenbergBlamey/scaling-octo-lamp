@@ -45,8 +45,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - run: |
-          echo "Branch actual: ${{ github.ref }}"
 
       - name: Creación de Git Flow
         run: |
@@ -56,7 +54,6 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global init.defaultBranch main
           git flow init -d
-          echo "Branch actual: ${{ github.ref }}"
           touch .github/giflow_ran
       
       - name: Realizar commit de los cambios
@@ -71,6 +68,9 @@ jobs:
     if: needs.Check_Init.outputs.script_already_ran == 'false'
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Creacion de Git Ignore
         id: check_state
         run: |
@@ -83,7 +83,6 @@ jobs:
           fi
 
       - name: Ingresar registros a de Git Ignore
-        if: env.gitignore_exist == 'false'
         run: |
           echo "# Byte-compiled / optimized / DLL files" >> .gitignore
           echo "__pycache__/" >> .gitignore
