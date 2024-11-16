@@ -54,15 +54,17 @@ jobs:
           else
             echo "branch_exists=false" >> $GITHUB_ENV
           fi
+      - name: Git config
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global init.defaultBranch main
 
       - name: Creación de Git Flow
         if: env.branch_exists == 'false'
         run: |
           sudo apt-get update
           sudo apt-get -y install git-flow
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global init.defaultBranch main
           git flow init -d
       
       - name: Realizar rebase de main a develop
