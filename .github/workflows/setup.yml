@@ -171,11 +171,6 @@ jobs:
         which python
         python --version
 
-    - name: 'Use CMake for the same script'
-      run: |
-        source ./.venv/bin/activate
-        Python3_ROOT_DIR= cmake -B build -S .
-
     - name: Realizar commit de los cambios
       run: |
         git fetch origin
