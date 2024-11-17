@@ -171,11 +171,6 @@ jobs:
         which python
         python --version
 
-    - name: 'Run a simple python script directly'
-      run: |
-        source ./.venv/bin/activate
-        python main.py
-
     - name: 'Use CMake for the same script'
       run: |
         source ./.venv/bin/activate
