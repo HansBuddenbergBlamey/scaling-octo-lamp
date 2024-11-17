@@ -280,10 +280,10 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-          - name: Crear Carpetas Base
-          run: |
-            mkdir -p dist src test config docs logs temp db
-            touch dist/.gitkeep config/.gitkeep docs/.gitkeep logs/.gitkeep temp/.gitkeep db/.gitkeep
+      - name: Crear Carpetas Base
+        run: |
+          mkdir -p dist src test config docs logs temp db
+          touch dist/.gitkeep config/.gitkeep docs/.gitkeep logs/.gitkeep temp/.gitkeep db/.gitkeep
     
       - name: Crear archivos base para Python y pruebas
         run: |
