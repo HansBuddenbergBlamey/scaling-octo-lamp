@@ -143,35 +143,8 @@ jobs:
         python-version: '3.10'
         #cache: "pip"
 
-    - name: Cache virtualenv
-      uses: actions/cache@v3
-      id: cache-venv
-      with:
-        path: ./.venv/
-        key: ${{ runner.os }}-.10-venv-${{ hashFiles('requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-3.10-venv-
-
-    - name: 'Install python dependencies for generator'
-      if: steps.cache-venv.outputs.cache-hit != 'true'
-      run: |
-        python --version
-        python -m venv ./.venv
-        source ./.venv/bin/activate
-        python -m pip install --upgrade pip
-        if [[ -f requirements.txt ]]; then
-          pip install -r requirements.txt
-        else
-          echo "" > requirements.txt
-        fi
-
-    - name: 'Print python version'
-      run: |
-        which python
-        python --version
-        source ./.venv/bin/activate
-        which python
-        python --version
+    - name: Setup uv
+      uses: andgineer/uv-venv@v3
 
     - name: Realizar commit de los cambios
       run: |
