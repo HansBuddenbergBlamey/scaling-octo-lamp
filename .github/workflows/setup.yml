@@ -251,7 +251,7 @@ jobs:
           echo "temp/" >> .gitignore
           echo "db/" >> .gitignore
           echo "src/" >> .gitignore
-          echo "tests/" >> .gitignore
+          echo "test/" >> .gitignore
           echo "docs/" >> .gitignore
           echo "" >> .gitignore
 
@@ -280,25 +280,41 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Crear entorno de desarrollo
+          - name: Crear Carpetas Base
+          run: |
+            mkdir -p dist src test config docs logs temp db
+            touch dist/.gitkeep config/.gitkeep docs/.gitkeep logs/.gitkeep temp/.gitkeep db/.gitkeep
+    
+      - name: Crear archivos base para Python y pruebas
         run: |
-          mkdir dist
-          touch dist/.gitkeep
-          mkdir src
-          touch src/.gitkeep
-          mkdir tests
-          touch tests/.gitkeep
-          mkdir config
-          touch config/.gitkeep
-          mkdir docs
-          touch docs/.gitkeep
-          mkdir logs
-          touch logs/.gitkeep
-          mkdir temp
-          touch temp/.gitkeep
-          mkdir db
-          touch db/.gitkeep
-      
+          echo "class ExampleClass:" > src/main.py
+          echo "    def __init__(self, value):" >> src/main.py
+          echo "        self.value = value" >> src/main.py
+          echo "" >> src/main.py
+
+          echo "    def get_value(self):" >> src/main.py
+          echo "        return self.value" >> src/main.py
+          echo "" >> src/main.py
+
+          echo "import pytest" > test/test_example.py
+          echo "from src.main import ExampleClass" >> test/test_example.py
+          echo "" >> test/test_example.py
+
+          echo "def test_example_class():" >> test/test_example.py
+          echo "    example = ExampleClass(42)" >> test/test_example.py
+          echo "    assert example.get_value() == 42" >> test/test_example.py
+
+      - name: Crear requirements.txt
+        run: |
+          if [ ! -f requirements.txt ]; then
+            echo "Creando un archivo base requirements.txt."
+            echo "# Agrega tus dependencias aquí." > requirements.txt
+            echo "pytest" >> requirements.txt
+          else
+            echo "El archivo requirements.txt ya existe."
+            echo "pytest" >> requirements.txt
+          fi
+
       - name: Escribir README.md
         run: |
           echo "# Proyecto Python" > README.md
@@ -309,7 +325,7 @@ jobs:
           echo "" >> README.md
           echo "- **dist/**: Archivos distribuidos y empaquetados." >> README.md
           echo "- **src/**: Código fuente del proyecto." >> README.md
-          echo "- **tests/**: Pruebas unitarias y de integración." >> README.md
+          echo "- **test/**: Pruebas unitarias y de integración." >> README.md
           echo "- **docs/**: Documentación del proyecto." >> README.md
           echo "- **config/**: Archivos de configuración del proyecto." >> README.md
           echo "- **logs/**: Archivos de log." >> README.md
@@ -329,18 +345,11 @@ jobs:
           echo "" >> README.md
           echo "Por favor, asegúrate de actualizar las pruebas según sea necesario y de seguir las mejores prácticas de codificación." >> README.md
 
-      - name: Crear requirements.txt
-        run: |
-          if [ ! -f requirements.txt ]; then
-            echo "Creando un archivo base requirements.txt."
-            echo "# Agrega tus dependencias aquí." > requirements.txt
-          fi
-          
       - name: Realizar commit de los cambios
         run: |
           git fetch origin
           git checkout develop || git checkout -b develop origin/main
-          git add requirements.txt README.md dist/ src/ config/ tests/ docs/ logs/ temp/ db/
+          git add requirements.txt README.md dist/ src/ config/ test/ docs/ logs/ temp/ db/
           git commit -m "Agregar entorno virtual y dependencias a requirements.txt"
           git push origin develop
 
