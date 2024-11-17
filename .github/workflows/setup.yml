@@ -283,13 +283,21 @@ jobs:
       - name: Crear entorno de desarrollo
         run: |
           mkdir dist
+          touch dist/.gitkeep
           mkdir src
+          touch src/.gitkeep
           mkdir tests
+          touch tests/.gitkeep
           mkdir config
+          touch config/.gitkeep
           mkdir docs
+          touch docs/.gitkeep
           mkdir logs
+          touch logs/.gitkeep
           mkdir temp
+          touch temp/.gitkeep
           mkdir db
+          touch db/.gitkeep
       
       - name: Escribir README.md
         run: |
