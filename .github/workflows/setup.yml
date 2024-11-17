@@ -335,11 +335,11 @@ jobs:
           echo "## Cómo Empezar" >> README.md
           echo "" >> README.md
           echo "1. Clona el repositorio." >> README.md
-          echo "2. Crea un entorno virtual: `python -m venv .venv`" >> README.md
+          echo "2. Crea un entorno virtual: \`python -m venv .venv\`" >> README.md
           echo "3. Activa el entorno virtual:" >> README.md
-          echo "   - En Windows: `.venv\\Scripts\\activate`" >> README.md
-          echo "   - En Unix o MacOS: `source .venv/bin/activate`" >> README.md
-          echo "4. Instala las dependencias: `pip install -r requirements.txt`" >> README.md
+          echo "   - En Windows: \`.venv\\Scripts\\activate\`" >> README.md
+          echo "   - En Unix o MacOS: \`source .venv/bin/activate\`" >> README.md
+          echo "4. Instala las dependencias: \`pip install -r requirements.txt\`" >> README.md
           echo "" >> README.md
           echo "## Contribuir" >> README.md
           echo "" >> README.md
