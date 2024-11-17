@@ -210,7 +210,7 @@ jobs:
           echo ".Python" >> .gitignore
           echo "build/" >> .gitignore
           echo "develop-eggs/" >> .gitignore
-          echo "dist/" >> .gitignore
+          echo "#dist/" >> .gitignore
           echo "downloads/" >> .gitignore
           echo "eggs/" >> .gitignore
           echo ".eggs/" >> .gitignore
@@ -257,7 +257,7 @@ jobs:
           echo "" >> .gitignore
           echo "# Django stuff:" >> .gitignore
           echo "*.log" >> .gitignore
-          echo "log/" >> .gitignore
+          echo "#log/" >> .gitignore
           echo "local_settings.py" >> .gitignore
           echo "db.sqlite3" >> .gitignore
           echo "db.sqlite3-journal" >> .gitignore
@@ -337,12 +337,12 @@ jobs:
           echo ".vscode/" >> .gitignore
           echo "" >> .gitignore
           echo "# Otros" >> .gitignore
-          echo "logs/" >> .gitignore
-          echo "temp/" >> .gitignore
-          echo "db/" >> .gitignore
-          echo "src/" >> .gitignore
-          echo "test/" >> .gitignore
-          echo "docs/" >> .gitignore
+          echo "#logs/" >> .gitignore
+          echo "#temp/" >> .gitignore
+          echo "#db/" >> .gitignore
+          echo "#src/" >> .gitignore
+          echo "#test/" >> .gitignore
+          echo "#docs/" >> .gitignore
           echo "" >> .gitignore
 
       - name: Realizar commit de los cambios
