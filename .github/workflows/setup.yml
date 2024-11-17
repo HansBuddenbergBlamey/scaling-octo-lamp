@@ -292,7 +292,7 @@ jobs:
       
       - name: Escribir README.md
         run: |
-          echo # Proyecto Python" > README.md
+          echo "# Proyecto Python" > README.md
           echo "" >> README.md
           echo "Este es un proyecto de plantilla para desarrollos en Python." >> README.md
           echo "" >> README.md
@@ -316,7 +316,7 @@ jobs:
           echo "" >> README.md
           echo "## Contribuir" >> README.md
           echo "" >> README.md
-          echo "Por favor, asegúrate de actualizar las pruebas según sea necesario y de seguir las mejores prácticas de codificación. >> README.md
+          echo "Por favor, asegúrate de actualizar las pruebas según sea necesario y de seguir las mejores prácticas de codificación." >> README.md
 
       - name: Crear requirements.txt
         run: |
