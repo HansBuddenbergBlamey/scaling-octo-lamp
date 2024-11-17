@@ -285,6 +285,7 @@ jobs:
           mkdir dist
           mkdir src
           mkdir tests
+          mkdir config
           mkdir docs
           mkdir logs
           mkdir temp
@@ -298,9 +299,11 @@ jobs:
           echo "" >> README.md
           echo "## Estructura del Proyecto" >> README.md
           echo "" >> README.md
+          echo "- **dist/**: Archivos distribuidos y empaquetados." >> README.md
           echo "- **src/**: Código fuente del proyecto." >> README.md
           echo "- **tests/**: Pruebas unitarias y de integración." >> README.md
           echo "- **docs/**: Documentación del proyecto." >> README.md
+          echo "- **config/**: Archivos de configuración del proyecto." >> README.md
           echo "- **logs/**: Archivos de log." >> README.md
           echo "- **temp/**: Archivos temporales." >> README.md
           echo "- **db/**: Archivos de base de datos." >> README.md
@@ -329,7 +332,7 @@ jobs:
         run: |
           git fetch origin
           git checkout develop || git checkout -b develop origin/main
-          git add requirements.txt .venv/
+          git add requirements.txt README.md dist/ src/ config/ tests/ docs/ logs/ temp/ db/
           git commit -m "Agregar entorno virtual y dependencias a requirements.txt"
           git push origin develop
 
