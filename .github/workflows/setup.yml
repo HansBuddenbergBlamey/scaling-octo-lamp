@@ -1,4 +1,4 @@
-name: Setup Project
+name: Setup Python Project
 
 on:
   push:
@@ -78,13 +78,103 @@ jobs:
           fi
           git push --force origin develop
 
+  Creacion_de_Entorno:
+    runs-on: ubuntu-latest
+    needs: 
+      - Setear_GitFlow
+    permissions:
+      contents: write
+    if: needs.Check_Init.outputs.script_already_ran == 'false'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Git config
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Crear Carpetas Base
+        run: |
+          mkdir -p dist src test config docs logs temp db
+          touch dist/.gitkeep config/.gitkeep docs/.gitkeep logs/.gitkeep temp/.gitkeep db/.gitkeep
+    
+      - name: Crear archivos base para Python y pruebas
+        run: |
+          echo "class ExampleClass:" > src/main.py
+          echo "    def __init__(self, value):" >> src/main.py
+          echo "        self.value = value" >> src/main.py
+          echo "" >> src/main.py
+
+          echo "    def get_value(self):" >> src/main.py
+          echo "        return self.value" >> src/main.py
+          echo "" >> src/main.py
+
+          echo "import pytest" > test/test_example.py
+          echo "from src.main import ExampleClass" >> test/test_example.py
+          echo "" >> test/test_example.py
+
+          echo "def test_example_class():" >> test/test_example.py
+          echo "    example = ExampleClass(42)" >> test/test_example.py
+          echo "    assert example.get_value() == 42" >> test/test_example.py
+
+      - name: Crear requirements.txt
+        run: |
+          if [ ! -f requirements.txt ]; then
+            echo "Creando un archivo base requirements.txt."
+            echo "# Agrega tus dependencias aquí." > requirements.txt
+            echo "pytest" >> requirements.txt
+          else
+            echo "El archivo requirements.txt ya existe."
+            echo "pytest" >> requirements.txt
+          fi
+
+      - name: Escribir README.md
+        run: |
+          echo "# Proyecto Python" > README.md
+          echo "" >> README.md
+          echo "Este es un proyecto de plantilla para desarrollos en Python." >> README.md
+          echo "" >> README.md
+          echo "## Estructura del Proyecto" >> README.md
+          echo "" >> README.md
+          echo "- **dist/**: Archivos distribuidos y empaquetados." >> README.md
+          echo "- **src/**: Código fuente del proyecto." >> README.md
+          echo "- **test/**: Pruebas unitarias y de integración." >> README.md
+          echo "- **docs/**: Documentación del proyecto." >> README.md
+          echo "- **config/**: Archivos de configuración del proyecto." >> README.md
+          echo "- **logs/**: Archivos de log." >> README.md
+          echo "- **temp/**: Archivos temporales." >> README.md
+          echo "- **db/**: Archivos de base de datos." >> README.md
+          echo "" >> README.md
+          echo "## Cómo Empezar" >> README.md
+          echo "" >> README.md
+          echo "1. Clona el repositorio." >> README.md
+          echo "2. Crea un entorno virtual: \`python -m venv .venv\`" >> README.md
+          echo "3. Activa el entorno virtual:" >> README.md
+          echo "   - En Windows: \`.venv\\Scripts\\activate\`" >> README.md
+          echo "   - En Unix o MacOS: \`source .venv/bin/activate\`" >> README.md
+          echo "4. Instala las dependencias: \`pip install -r requirements.txt\`" >> README.md
+          echo "" >> README.md
+          echo "## Contribuir" >> README.md
+          echo "" >> README.md
+          echo "Por favor, asegúrate de actualizar las pruebas según sea necesario y de seguir las mejores prácticas de codificación." >> README.md
+
+      - name: Realizar commit de los cambios
+        run: |
+          git fetch origin
+          git checkout develop || git checkout -b develop origin/main
+          git add requirements.txt README.md dist/ src/ config/ test/ docs/ logs/ temp/ db/
+          git commit -m "Agregar entorno virtual y dependencias a requirements.txt"
+          git push origin develop
+
   Setear_GitIgnore:
     runs-on: ubuntu-latest
     needs: 
       - Setear_GitFlow
     permissions:
       contents: write
-    if: needs.Check_Init.outputs.script_already_ran != 'false'
+    if: needs.Check_Init.outputs.script_already_ran == 'false'
 
     steps:
       - name: Checkout repository
@@ -211,13 +301,13 @@ jobs:
           echo "*.sage.py" >> .gitignore
           echo "" >> .gitignore
           echo "# Environments" >> .gitignore
-          echo "#.env" >> .gitignore
-          echo "#.venv/" >> .gitignore
-          echo "#env/" >> .gitignore
-          echo "#venv/" >> .gitignore
-          echo "#ENV/" >> .gitignore
-          echo "#env.bak/" >> .gitignore
-          echo "#venv.bak/" >> .gitignore
+          echo ".env" >> .gitignore
+          echo ".venv/" >> .gitignore
+          echo "env/" >> .gitignore
+          echo "venv/" >> .gitignore
+          echo "ENV/" >> .gitignore
+          echo "env.bak/" >> .gitignore
+          echo "venv.bak/" >> .gitignore
           echo "" >> .gitignore
           echo "# Spyder project settings" >> .gitignore
           echo ".spyderproject" >> .gitignore
@@ -261,96 +351,6 @@ jobs:
           git checkout develop || git checkout -b develop origin/main
           git add .gitignore
           git commit -m "Actualizar .gitignore"
-          git push origin develop
-
-  Creacion_de_Entorno:
-    runs-on: ubuntu-latest
-    needs: 
-      - Setear_GitFlow
-    permissions:
-      contents: write
-    if: needs.Check_Init.outputs.script_already_ran == 'false'
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Git config
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Crear Carpetas Base
-        run: |
-          mkdir -p dist src test config docs logs temp db
-          touch dist/.gitkeep config/.gitkeep docs/.gitkeep logs/.gitkeep temp/.gitkeep db/.gitkeep
-    
-      - name: Crear archivos base para Python y pruebas
-        run: |
-          echo "class ExampleClass:" > src/main.py
-          echo "    def __init__(self, value):" >> src/main.py
-          echo "        self.value = value" >> src/main.py
-          echo "" >> src/main.py
-
-          echo "    def get_value(self):" >> src/main.py
-          echo "        return self.value" >> src/main.py
-          echo "" >> src/main.py
-
-          echo "import pytest" > test/test_example.py
-          echo "from src.main import ExampleClass" >> test/test_example.py
-          echo "" >> test/test_example.py
-
-          echo "def test_example_class():" >> test/test_example.py
-          echo "    example = ExampleClass(42)" >> test/test_example.py
-          echo "    assert example.get_value() == 42" >> test/test_example.py
-
-      - name: Crear requirements.txt
-        run: |
-          if [ ! -f requirements.txt ]; then
-            echo "Creando un archivo base requirements.txt."
-            echo "# Agrega tus dependencias aquí." > requirements.txt
-            echo "pytest" >> requirements.txt
-          else
-            echo "El archivo requirements.txt ya existe."
-            echo "pytest" >> requirements.txt
-          fi
-
-      - name: Escribir README.md
-        run: |
-          echo "# Proyecto Python" > README.md
-          echo "" >> README.md
-          echo "Este es un proyecto de plantilla para desarrollos en Python." >> README.md
-          echo "" >> README.md
-          echo "## Estructura del Proyecto" >> README.md
-          echo "" >> README.md
-          echo "- **dist/**: Archivos distribuidos y empaquetados." >> README.md
-          echo "- **src/**: Código fuente del proyecto." >> README.md
-          echo "- **test/**: Pruebas unitarias y de integración." >> README.md
-          echo "- **docs/**: Documentación del proyecto." >> README.md
-          echo "- **config/**: Archivos de configuración del proyecto." >> README.md
-          echo "- **logs/**: Archivos de log." >> README.md
-          echo "- **temp/**: Archivos temporales." >> README.md
-          echo "- **db/**: Archivos de base de datos." >> README.md
-          echo "" >> README.md
-          echo "## Cómo Empezar" >> README.md
-          echo "" >> README.md
-          echo "1. Clona el repositorio." >> README.md
-          echo "2. Crea un entorno virtual: \`python -m venv .venv\`" >> README.md
-          echo "3. Activa el entorno virtual:" >> README.md
-          echo "   - En Windows: \`.venv\\Scripts\\activate\`" >> README.md
-          echo "   - En Unix o MacOS: \`source .venv/bin/activate\`" >> README.md
-          echo "4. Instala las dependencias: \`pip install -r requirements.txt\`" >> README.md
-          echo "" >> README.md
-          echo "## Contribuir" >> README.md
-          echo "" >> README.md
-          echo "Por favor, asegúrate de actualizar las pruebas según sea necesario y de seguir las mejores prácticas de codificación." >> README.md
-
-      - name: Realizar commit de los cambios
-        run: |
-          git fetch origin
-          git checkout develop || git checkout -b develop origin/main
-          git add requirements.txt README.md dist/ src/ config/ test/ docs/ logs/ temp/ db/
-          git commit -m "Agregar entorno virtual y dependencias a requirements.txt"
           git push origin develop
 
   Finalizar_Setup:
