@@ -21,7 +21,7 @@ jobs:
       - name: Chequear si el script ya se ejecutó
         id: check_state
         run: |
-          if [ -f ".github/script_ran" ]; then
+          if [ -f ".github/initial_ran" ]; then
             echo "script_already_ran=true" >> $GITHUB_OUTPUT
           else
             echo "script_already_ran=false" >> $GITHUB_OUTPUT
@@ -372,7 +372,7 @@ jobs:
         if: needs.Check_Init.outputs.script_already_ran == 'false'
         run: |
           echo -e "Archivo de Estado Creado Previmente: \033[0;31m${{ needs.Check_Init.outputs.script_already_ran }}"
-          #touch .github/script_ran
+          touch .github/initial_ran
           echo -e "Archivo de Estado Creado Previmente: \033[0;32mtrue"
 
       - name: Realizar commit de los cambios
